@@ -1,5 +1,11 @@
 <template>
     <div class="change-todos">
+        <v-radio-group v-model="filter" row >
+            <v-radio label="All" value="all" color="black"></v-radio>
+            <v-radio label="Completed" value="complete" color="green"></v-radio>
+            <v-radio label="Not Completed" value="notCompleted" color="red"></v-radio>
+        </v-radio-group>
+
         <v-btn class="button-complete-all" color="green darken-1" dark @click="completeAllTodos">
             <v-icon> done_all</v-icon>
             <span> Complete all todos</span>
@@ -16,63 +22,47 @@
 </template>
 
 <script>
-    import {SET_TODOS, ADD_ERROR, CLEAR_ERROR} from '../store/names/todo';
-    import LocalStorageService from '../Services/LocalStorageService';
+    import {SET_TODOS, ADD_ERROR, CLEAR_ERROR, DELETE_TODOS, COMPLETE_ALL_TODOS, SET_FILTER} from '../store/names/todo';
     import {mapState} from 'vuex';
 
     export default {
         name: "NavigationBar",
         computed: {
-            ...mapState('todos',
-                {
-                    errors: 'errors'
-                }),
+            ...mapState('todos', ['todos', 'error',]),
+            filter: {
+                get () {
+                    return this.$store.filter;
+                },
+                set (value) {
+                    this.$store.commit('todos/' + SET_FILTER, value);
+                }
+            }
         },
         methods:{
             completeAllTodos(){
-                try {
-                    let todosFromStorage = LocalStorageService.getFromLocalStorage('todos');
-                    if (todosFromStorage.every((todo) => {return todo.completed})){
-                        throw 'All todos are completed yet!';
-                    }
-                    todosFromStorage.forEach((todo) => {
-                        todo.completed ? null : todo.completed = true;
-                    });
-                    LocalStorageService.setLocalStorage('todos', todosFromStorage);
-                    this.$store.commit('todos/'+ SET_TODOS);
-                    if (this.errors.length) {
-                        this.$store.commit('todos/' + CLEAR_ERROR);
-                    }
-                } catch (e) {
-                    this.$store.commit('todos/' + ADD_ERROR, e);
+                if (this.todos.every((todo) => {return todo.completed})){
+                    return this.$store.commit('todos/' + ADD_ERROR, 'All todos are completed yet!');
+                }
+                this.$store.commit('todos/'+ COMPLETE_ALL_TODOS);
+                if (this.error) {
+                    this.$store.commit('todos/' + CLEAR_ERROR);
                 }
             },
             deleteCompletedTodos() {
-                try {
-                    let todosFromStorage = LocalStorageService.getFromLocalStorage('todos');
-                    if (todosFromStorage.filter(todo => todo.completed === true).length === 0){
-                        throw 'There are no completed todos! Please click on a todo to do it completed';
-                    }
-                    let notCompletedArray = todosFromStorage.filter(todo => todo.completed === false);
-                    LocalStorageService.setLocalStorage('todos', notCompletedArray);
-                    this.$store.commit('todos/' + SET_TODOS);
-                } catch (e) {
-                    this.$store.commit('todos/' + ADD_ERROR, e);
+                if (this.todos.filter(todo => todo.completed === true).length === 0){
+                    return this.$store.commit('todos/' + ADD_ERROR, 'There are no completed todos! Please click on a todo to do it completed');
                 }
+                let notCompletedArray = this.todos.filter(todo => todo.completed === false);
+                this.$store.commit('todos/' + SET_TODOS, notCompletedArray);
             },
             deleteAllTodos() {
-                try {
-                    if (this.errors.length) {
-                        this.$store.commit('todos/' + CLEAR_ERROR);
-                    }
-                    if (!LocalStorageService.getFromLocalStorage('todos').length){
-                        throw 'There are no todos!';
-                    }
-                    LocalStorageService.removeItemFromLocalStorage('todos');
-                    this.$store.commit('todos/' + SET_TODOS);
-                } catch (e) {
-                    this.$store.commit('todos/' + ADD_ERROR, e);
+                if (this.error) {
+                    this.$store.commit('todos/' + CLEAR_ERROR);
                 }
+                if (!this.todos.length){
+                    return this.$store.commit('todos/' + ADD_ERROR, 'There are no todos!');
+                }
+                this.$store.commit('todos/' + DELETE_TODOS);
             },
         }
     }

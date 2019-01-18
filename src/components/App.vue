@@ -4,12 +4,12 @@
       <p class="titleTodo">To Do List </p>
       <div class="tasks">
         <span>Tasks</span>
-        <span class="completed">({{getCompletedTodos}})</span>
-        <span class="errors"> {{errors.toString()}}</span>
+        <span class="remained">({{getRemainedTodos.length}})</span>
+        <span class="errors"> {{error}}</span>
       </div>
       <Input></Input>
       <NavigationBar></NavigationBar>
-      <Output></Output>
+      <TodoLIst></TodoLIst>
     </div>
   </div>
 </template>
@@ -17,23 +17,21 @@
 <script>
   import Input from './Input';
   import NavigationBar from './NavigationBar'
-  import Output from './Output';
+  import TodoLIst from './TodoLIst';
   import { mapState, mapGetters } from 'vuex';
   export default {
     name: 'app',
     components: {
       Input,
       NavigationBar,
-      Output
+      TodoLIst
     },
     computed: {
-      ...mapState('todos',
-        {
-          errors: 'errors'
+      ...mapState('todos', {
+          error: 'error'
         }),
-      ...mapGetters('todos',
-        {
-          getCompletedTodos: 'getCompletedTodos',
+      ...mapGetters('todos', {
+        getRemainedTodos: 'getRemainedTodos',
         }),
     },
   }
@@ -66,7 +64,7 @@
     margin: 0 0 1vh 2vh;
     font: 4vh arial, sans-serif;
   }
-  .completed{
+  .remained{
     font: 3vh arial, sans-serif;
     color: rgba(115, 111, 119, 0.88);
   }

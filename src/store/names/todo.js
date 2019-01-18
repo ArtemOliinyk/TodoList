@@ -1,4 +1,14 @@
-export const CLEAR_INPUT = 'CLEAR_INPUT';
+// export const names = {
+//     ADD_TODO, SET_TODOS, ADD_ERROR, CLEAR_ERROR, INITIAL_TODOS, DELETE_TODOS,
+//     DELETE_TODO, COMPLETE_TODO, COMPLETE_ALL_TODOS, SET_FILTER
+// };
+export const ADD_TODO = 'ADD_TODO';
 export const SET_TODOS = 'SET_TODOS';
 export const ADD_ERROR = 'ADD_ERROR';
 export const CLEAR_ERROR = 'CLEAR_ERROR';
+export const INITIAL_TODOS ='INITIAL_TODOS';
+export const DELETE_TODOS = 'DELETE_TODOS';
+export const DELETE_TODO = 'DELETE_TODO';
+export const COMPLETE_TODO = 'COMPLETE_TODO';
+export const COMPLETE_ALL_TODOS = 'COMPLETE_ALL_TODOS';
+export const SET_FILTER = 'SET_FILTER';
