@@ -5,11 +5,16 @@
       <div class="tasks">
         <span>Tasks</span>
         <span class="remained">({{getRemainedTodos.length}})</span>
-        <span class="errors"> {{error}}</span>
       </div>
-      <Input></Input>
-      <NavigationBar></NavigationBar>
-      <TodoLIst></TodoLIst>
+      <Input v-model="error"/>
+      <NavigationBar v-model="error"/>
+      <TodoLIst/>
+        <v-snackbar v-model="error.show" :timeout="3000">
+            {{error.message}}
+            <v-btn color="pink" flat  @click="error.show = false" >
+                Close
+            </v-btn>
+        </v-snackbar>
     </div>
   </div>
 </template>
@@ -18,7 +23,7 @@
   import Input from './Input';
   import NavigationBar from './NavigationBar'
   import TodoLIst from './TodoLIst';
-  import { mapState, mapGetters } from 'vuex';
+  import { mapGetters } from 'vuex';
   export default {
     name: 'app',
     components: {
@@ -26,13 +31,16 @@
       NavigationBar,
       TodoLIst
     },
+    data(){
+        return {
+            error: {
+                message: '',
+                show: false
+            }
+        }
+    },
     computed: {
-      ...mapState('todos', {
-          error: 'error'
-        }),
-      ...mapGetters('todos', {
-        getRemainedTodos: 'getRemainedTodos',
-        }),
+      ...mapGetters('todos', ['getRemainedTodos']),
     },
   }
 </script>

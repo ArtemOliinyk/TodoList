@@ -1,6 +1,6 @@
 <template>
     <div class="todo-item">
-        <div class="description" :class="[todo.completed ? 'completeDesrc' : 'description']" @click="completeTodo(todo.id)">
+        <div class="description" :class="changeCompletedStyle" @click="completeTodo(todo.id)">
             {{ todo.description }}
         </div>
         <div>
@@ -12,9 +12,8 @@
 </template>
 
 <script>
-    import {CLEAR_ERROR, DELETE_TODO, COMPLETE_TODO} from '../store/names/todo';
+    import {names} from '../store/names/todo';
     import {mapState} from 'vuex';
-    import LocalStorageService from '../Services/LocalStorageService';
     export default {
         props: {
             todo: Object
@@ -22,15 +21,18 @@
         name: "TodoListItem",
         computed: {
             ...mapState('todos', ['error']),
+            changeCompletedStyle(){
+                return this.todo.completed ? 'completeDesrc' : 'description'
+            }
         },
         methods: {
             deleteTodo(id) {
-                this.$store.commit('todos/' + DELETE_TODO, id);
+                this.$store.commit('todos/' + names.DELETE_TODO, id);
             },
             completeTodo(id) {
-                this.$store.commit('todos/' + COMPLETE_TODO, id);
+                this.$store.commit('todos/' + names.COMPLETE_TODO, id);
                 if (this.error) {
-                    this.$store.commit('todos/' + CLEAR_ERROR);
+                    this.$store.commit('todos/' + names.CLEAR_ERROR);
                 }
             },
         }

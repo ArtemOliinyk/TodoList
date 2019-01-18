@@ -6,7 +6,7 @@
     </div>
 </template>
 <script>
-  import {INITIAL_TODOS} from '../store/names/todo';
+  import {names} from '../store/names/todo';
   import { mapGetters} from 'vuex';
   import TodoListItem from './TodoListItem'
   export default {
@@ -15,7 +15,7 @@
         TodoListItem
     },
     created() {
-      this.$store.commit('todos/' + INITIAL_TODOS);
+      this.$store.commit('todos/' + names.INITIAL_TODOS);
     },
     computed: {
       ...mapGetters('todos' , ['filteredTodos'])

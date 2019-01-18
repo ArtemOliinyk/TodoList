@@ -14,38 +14,35 @@
 </template>
 
 <script>
-  import {ADD_TODO, ADD_ERROR, CLEAR_ERROR} from '../store/names/todo';
-  import {mapState} from 'vuex';
+  import {names} from '../store/names/todo';
   export default {
     name: "Input",
+    props:{
+      value:{
+        type: Object,
+        require: true
+      }
+    },
     data() {
       return {
         inputValue: ''
       }
     },
-    computed: {
-      ...mapState('todos', {
-          error: 'error'
-        }),
-    },
     methods: {
       addToLocalStore() {
         if (!this.inputValue.length){
-          return this.$store.commit('todos/' + ADD_ERROR, 'This field musn`t be empty');
+          return this.$emit('input',{message: 'Input field musn`t be empty', show: true});
         }
         if (this.inputValue.length > 30) {
-          return this.$store.commit('todos/' + ADD_ERROR, 'Too much symbols');
+          return this.$emit('input',{message: 'Too much symbols', show: true});
         }
         let newTodoItem = {
           id: Math.floor((Math.random()*1000) + 1), //random number between 1 and 1000
           description: this.inputValue,
           completed: false
         };
-        this.$store.commit('todos/'+ ADD_TODO , newTodoItem);
+        this.$store.commit('todos/'+ names.ADD_TODO , newTodoItem);
         this.inputValue = '';
-        if (this.error) {
-          this.$store.commit('todos/' + CLEAR_ERROR);
-        }
       },
     },
   }

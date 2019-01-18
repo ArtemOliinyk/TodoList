@@ -22,7 +22,7 @@
 </template>
 
 <script>
-    import {SET_TODOS, ADD_ERROR, CLEAR_ERROR, DELETE_TODOS, COMPLETE_ALL_TODOS, SET_FILTER} from '../store/names/todo';
+    import {names} from '../store/names/todo';
     import {mapState} from 'vuex';
 
     export default {
@@ -34,35 +34,29 @@
                     return this.$store.filter;
                 },
                 set (value) {
-                    this.$store.commit('todos/' + SET_FILTER, value);
+                    this.$store.commit('todos/' + names.SET_FILTER, value);
                 }
             }
         },
         methods:{
             completeAllTodos(){
                 if (this.todos.every((todo) => {return todo.completed})){
-                    return this.$store.commit('todos/' + ADD_ERROR, 'All todos are completed yet!');
+                    return this.$emit('input',{message: 'All todos are completed yet!', show: true});
                 }
-                this.$store.commit('todos/'+ COMPLETE_ALL_TODOS);
-                if (this.error) {
-                    this.$store.commit('todos/' + CLEAR_ERROR);
-                }
+                this.$store.commit('todos/'+ names.COMPLETE_ALL_TODOS);
             },
             deleteCompletedTodos() {
                 if (this.todos.filter(todo => todo.completed === true).length === 0){
-                    return this.$store.commit('todos/' + ADD_ERROR, 'There are no completed todos! Please click on a todo to do it completed');
+                    return this.$emit('input',{message: 'There are no completed todos! Please click on a todo to do it completed', show: true});
                 }
                 let notCompletedArray = this.todos.filter(todo => todo.completed === false);
-                this.$store.commit('todos/' + SET_TODOS, notCompletedArray);
+                this.$store.commit('todos/' + names.SET_TODOS, notCompletedArray);
             },
             deleteAllTodos() {
-                if (this.error) {
-                    this.$store.commit('todos/' + CLEAR_ERROR);
-                }
                 if (!this.todos.length){
-                    return this.$store.commit('todos/' + ADD_ERROR, 'There are no todos!');
+                    return this.$emit('input',{message: 'There are no todos!', show: true});
                 }
-                this.$store.commit('todos/' + DELETE_TODOS);
+                this.$store.commit('todos/' + names.DELETE_TODOS);
             },
         }
     }
