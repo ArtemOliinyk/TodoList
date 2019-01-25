@@ -1,9 +1,11 @@
-<template>
-    <div class="containerArea">
-            <div v-for="todo in filteredTodos" :key="todo.id" class="inline">
-                <TodoListItem :todo="todo" ></TodoListItem>
-            </div>
-    </div>
+<template lang="pug">
+    v-layout(row)
+        v-flex(xs12)
+            v-list.pa-0(two-line style="background-color:#fafafa")
+                v-layout(column reverse)
+                    div(v-for="(todo, index) in filteredTodos" :key="todo.id")
+                        TodoListItem(:todo="todo" :index="index")
+                        v-divider
 </template>
 <script>
   import {names} from '../store/names/todo';
@@ -24,18 +26,4 @@
 </script>
 
 <style scoped>
-  .containerArea{
-    display: flex;
-    flex-direction: column-reverse;
-    margin: 0 2vh 2vh 2vh;
-  }
-  .inline{
-    height: 5vh;
-    margin-top: 0.5vh;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-  }
 </style>

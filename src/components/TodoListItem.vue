@@ -1,81 +1,57 @@
-<template>
-    <div class="todo-item">
-        <div class="description" :class="changeCompletedStyle" @click="completeTodo(todo.id)">
-            {{ todo.description }}
-        </div>
-        <div>
-            <v-btn class="delete" color="red darken-1" dark @click="deleteTodo(todo.id)">
-                <v-icon> close </v-icon>
-            </v-btn>
-        </div>
-    </div>
+<template lang="pug">
+    v-list-tile
+        v-list-tile-action
+            v-checkbox(@change="completeTodo(index)" )
+        v-list-tile-content
+            v-list-tile-title {{ todo.description }}
+            v-list-tile-sub-title {{ todo.task }}
+        v-list-tile-action
+            v-flex(column)
+                v-btn.ma-1(@click="dialog = true" small color="blue darken-1" dark)
+                    v-icon edit
+                v-btn.ma-1(@click="deleteTodo(index)" small color="red darken-1" dark )
+                    v-icon close
+        include ../assets/pugTemplates/DialogTemplate.pug
+
 </template>
 
 <script>
     import {names} from '../store/names/todo';
-    import {mapState} from 'vuex';
+    import {formMixin} from '../mixins/formMixin';
+    import Vue from 'vue';
     export default {
         props: {
-            todo: Object
+            todo: Object,
+            index: Number
         },
+        mixins: [formMixin],
         name: "TodoListItem",
-        computed: {
-            ...mapState('todos', ['error']),
-            changeCompletedStyle(){
-                return this.todo.completed ? 'completeDesrc' : 'description'
+        data() {
+            return {
+                description: this.todo.description,
+                task: this.todo.task,
+                dialog: false,
             }
         },
         methods: {
-            deleteTodo(id) {
-                this.$store.commit('todos/' + names.DELETE_TODO, id);
-            },
-            completeTodo(id) {
-                this.$store.commit('todos/' + names.COMPLETE_TODO, id);
-                if (this.error) {
-                    this.$store.commit('todos/' + names.CLEAR_ERROR);
+            editTodo(index){
+                let newTodo = this.todo;
+                if (this.description.length && this.task.length ){
+                    Vue.set(newTodo, 'description', this.description);
+                    Vue.set(newTodo, 'task', this.task);
+                    this.$store.commit('todos/' + names.EDIT_TODO, {index: index, todo: newTodo});
+                    this.dialog = false
                 }
+            },
+            deleteTodo(index) {
+                this.$store.commit('todos/' + names.DELETE_TODO, index);
+            },
+            completeTodo(index) {
+                this.$store.commit('todos/' + names.COMPLETE_TODO, index);
             },
         }
     }
 </script>
 
 <style scoped>
-    .todo-item{
-        display: flex;
-        flex-direction: row;
-        height: 5vh;
-        width: 100%;
-    }
-    .description{
-        display: flex;
-        align-items: center;
-        padding: 0 2% 0 2%;
-        height: 99%;
-        width: 100%;
-        font: 2vh arial, sans-serif;
-        background-color: rgba(227, 233, 232, 0.9);
-        border: 0.01vh solid rgba(177,183,182,0.87)
-    }
-    .description:hover{
-        background-color: rgba(208, 214, 213, 0.9);
-    }
-    .completeDesrc{
-        text-decoration: line-through;
-        display: flex;
-        align-items: center;
-        padding: 0 2% 0 2%;
-        height: 99%;
-        width: 100%;
-        font: 2vh arial, sans-serif;
-        background-color: rgba(199, 233, 191, 0.9);
-        border: 0.01vh solid rgba(177,183,182,0.87)
-    }
-    .completeDesrc:hover{
-        background-color: rgba(178, 220, 162, 0.9);
-    }
-    .delete{
-        margin: 0 !important;
-        height: 99% !important;
-        width: 10% !important;
-    }
 </style>

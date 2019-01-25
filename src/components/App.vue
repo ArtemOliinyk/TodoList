@@ -1,47 +1,45 @@
-<template>
-  <div id="app">
-    <div class="main">
-      <p class="titleTodo">To Do List </p>
-      <div class="tasks">
-        <span>Tasks</span>
-        <span class="remained">({{getRemainedTodos.length}})</span>
-      </div>
-      <Input v-model="error"/>
-      <NavigationBar v-model="error"/>
-      <TodoLIst/>
-        <v-snackbar v-model="error.show" :timeout="3000">
-            {{error.message}}
-            <v-btn color="pink" flat  @click="error.show = false" >
-                Close
-            </v-btn>
-        </v-snackbar>
-    </div>
-  </div>
-</template>
+<template lang="pug">
+    div#app
+        v-app
+            v-layout(column wrap)
+                v-flex(xs12)
+                    v-layout(justify-center)
+                        p.display-2 To Do List
+                v-flex(xs12 px-2)
+                    v-layout(row wrap)
+                        p.headline Tasks: {{todos.length}}
+                v-flex(xs12 px-2)
+                    v-layout(align-center justify-space-between row wrap)
+                        p.headline Completed: {{getCompletedTodos.length}}
+                        v-progress-circular(:size="50" :value="progress" color="teal")
+                Input
+                NavigationBar
+                TodoLIst
+
+</template>/?
 
 <script>
   import Input from './Input';
   import NavigationBar from './NavigationBar'
   import TodoLIst from './TodoLIst';
-  import { mapGetters } from 'vuex';
+  import { mapState, mapGetters } from 'vuex';
   export default {
-    name: 'app',
-    components: {
-      Input,
-      NavigationBar,
-      TodoLIst
-    },
-    data(){
-        return {
-            error: {
-                message: '',
-                show: false
-            }
-        }
-    },
-    computed: {
-      ...mapGetters('todos', ['getRemainedTodos']),
-    },
+      name: 'app',
+      components: {
+          Input,
+          NavigationBar,
+          TodoLIst
+      },
+      computed: {
+          ...mapState('todos', ['todos']),
+          ...mapGetters('todos', ['getCompletedTodos']),
+          progress () {
+              if (!this.todos.length){
+                  return 0;
+              }
+              return this.getCompletedTodos.length / this.todos.length * 100
+          },
+      },
   }
 </script>
 
@@ -58,26 +56,5 @@
   }
   #app{
     width: 100%;
-  }
-  .main{
-    display: flex;
-    flex-direction: column;
-  }
-  .titleTodo{
-    text-align: center;
-    padding: 1vh;
-    font: 4vh arial, sans-serif;
-  }
-  .tasks{
-    margin: 0 0 1vh 2vh;
-    font: 4vh arial, sans-serif;
-  }
-  .remained{
-    font: 3vh arial, sans-serif;
-    color: rgba(115, 111, 119, 0.88);
-  }
-  .errors{
-    font: 1.5vh arial, sans-serif;
-    color: red;
   }
 </style>
