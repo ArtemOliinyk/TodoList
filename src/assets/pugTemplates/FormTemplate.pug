@@ -1,5 +1,4 @@
 v-layout(column)
     v-flex.pa-0
-        v-text-field(v-model.trim="description" :rules="descriptionRules" label="Description" required)
-        v-textarea(v-model.trim="task" :rules="taskRules" label="Task"  hint="Hint text" required)
-        block action
+        v-text-field(v-model.trim="title" :rules="titleRules" label="Title*" :counter="20" required)
+        v-textarea(v-model.trim="task" :rules="taskRules" label="Task*" :counter="100"  hint="Hint text" required)

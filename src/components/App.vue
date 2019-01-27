@@ -19,42 +19,42 @@
 </template>/?
 
 <script>
-  import Input from './Input';
+import Input from './Input';
   import NavigationBar from './NavigationBar'
   import TodoLIst from './TodoLIst';
   import { mapState, mapGetters } from 'vuex';
-  export default {
-      name: 'app',
-      components: {
-          Input,
-          NavigationBar,
-          TodoLIst
-      },
-      computed: {
-          ...mapState('todos', ['todos']),
-          ...mapGetters('todos', ['getCompletedTodos']),
-          progress () {
-              if (!this.todos.length){
-                  return 0;
-              }
-              return this.getCompletedTodos.length / this.todos.length * 100
-          },
-      },
-  }
+export default {
+    name: "app",
+    components: {
+        Input,
+        NavigationBar,
+        TodoLIst
+    },
+    computed: {
+        ...mapState("todos", ["todos"]),
+        ...mapGetters("todos", ["getCompletedTodos"]),
+        progress() {
+            if (!this.todos.length) {
+                return 0;
+            }
+            return (this.getCompletedTodos.length / this.todos.length) * 100;
+        }
+    }
+};
 </script>
 
 <!-- Local CSS -->
 <style scoped>
-  *{
-    margin: 0;
-    padding: 0;
-  }
-  body{
-    display: flex;
-    flex-flow: row wrap;
-    height: 100%;
-  }
-  #app{
-    width: 100%;
-  }
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  display: flex;
+  flex-flow: row wrap;
+  height: 100%;
+}
+#app {
+  width: 100%;
+}
 </style>

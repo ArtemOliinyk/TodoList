@@ -1,57 +1,68 @@
 <template lang="pug">
-    v-list-tile
-        v-list-tile-action
-            v-checkbox(@change="completeTodo(index)" )
-        v-list-tile-content
-            v-list-tile-title {{ todo.description }}
-            v-list-tile-sub-title {{ todo.task }}
-        v-list-tile-action
-            v-flex(column)
-                v-btn.ma-1(@click="dialog = true" small color="blue darken-1" dark)
-                    v-icon edit
-                v-btn.ma-1(@click="deleteTodo(index)" small color="red darken-1" dark )
-                    v-icon close
-        include ../assets/pugTemplates/DialogTemplate.pug
+    extends ../assets/pugTemplates/DialogTemplate.pug
+    block above
+        v-list-tile
+            v-list-tile-action
+                v-checkbox(v-model="isCompleted")
+            v-list-tile-content
+                v-list-tile-title {{ todo.title }}
+                v-list-tile-sub-title {{ todo.task }}
+            v-list-tile-action
+                v-flex(column)
+                    v-btn.ma-1(@click="dialog = true" small color="blue darken-1" dark)
+                        v-icon edit
+                    v-btn.ma-1(@click="deleteTodo(todo)" small color="red darken-1" dark )
+                        v-icon close
+    block title
+        span.headline Edit Task
+    block action
+        v-btn(@click="editTodo(index)" color="blue darken-1" flat ) Edit
 
 </template>
 
 <script>
-    import {names} from '../store/names/todo';
-    import {formMixin} from '../mixins/formMixin';
-    import Vue from 'vue';
-    export default {
-        props: {
-            todo: Object,
-            index: Number
+import { names } from "../store/names/todo";
+import { formMixin } from "../mixins/formMixin";
+import Vue from "vue";
+export default {
+    props: {
+        todo: Object,
+        index: Number
+    },
+    mixins: [formMixin],
+    name: "TodoListItem",
+    data() {
+        return {
+            title: this.todo.title,
+            task: this.todo.task,
+            dialog: false
+        };
         },
-        mixins: [formMixin],
-        name: "TodoListItem",
-        data() {
-            return {
-                description: this.todo.description,
-                task: this.todo.task,
-                dialog: false,
+    computed: {
+        isCompleted: {
+            get() {
+                return this.todo.completed;
+                },
+            set(value) {
+                this.$store.commit("todos/" + names.TOGGLE_TODO, { index: this.index, isComplete: value});
+            }
+        }
+        },
+    methods: {
+        editTodo(index) {
+            let newTodo = this.todo;
+            if (this.title.length && this.task.length) {
+                Vue.set(newTodo, "title", this.title);
+                Vue.set(newTodo, "task", this.task);
+                this.$store.commit("todos/" + names.EDIT_TODO, {index: index, todo: newTodo});
+                this.dialog = false;
             }
         },
-        methods: {
-            editTodo(index){
-                let newTodo = this.todo;
-                if (this.description.length && this.task.length ){
-                    Vue.set(newTodo, 'description', this.description);
-                    Vue.set(newTodo, 'task', this.task);
-                    this.$store.commit('todos/' + names.EDIT_TODO, {index: index, todo: newTodo});
-                    this.dialog = false
-                }
-            },
-            deleteTodo(index) {
-                this.$store.commit('todos/' + names.DELETE_TODO, index);
-            },
-            completeTodo(index) {
-                this.$store.commit('todos/' + names.COMPLETE_TODO, index);
-            },
+        deleteTodo(todo) {
+            this.$store.commit("todos/" + names.DELETE_TODO, todo);
         }
     }
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
