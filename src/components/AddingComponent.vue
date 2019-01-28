@@ -1,45 +1,64 @@
 <template lang="pug">
-    extends ../assets/pugTemplates/DialogTemplate.pug
-    block above
-        v-container.pa-0
-            v-layout(justify-center)
-                v-btn(color="blue darken-2" dark @click="dialog = true")
-                    v-icon(dark) add
-                    | Add Task
-    block title
-        span.headline Add Task
-    block action
-        v-btn(@click="addTodo" color="blue darken-1" flat ) Add
+    v-container.pa-0
+        v-layout(justify-center)
+            v-btn(@click="isShowDialog = true" color="blue darken-2" dark )
+                v-icon(dark) add
+                | Add Task
+        v-form(ref="form" v-model="inputData.isFormValid" lazy-validation)
+            TodoItemForm(:isShowDialog="isShowDialog" :dataForm="dataForm" :inputData="inputData" :action="addTodo" :changeShowDialog="changeShowDialog")
 </template>
 
 <script>
 import { names } from "../store/names/todo";
-import { formMixin } from "../mixins/formMixin";
 import { mapMutations } from "vuex";
+import TodoItemForm from "./TodoItemForm";
 export default {
     name: "AddingComponent",
-    data(){
+    components: {
+        TodoItemForm
+    },
+    data() {
         return {
-            dialog: false
+            isShowDialog: false,
+            dataForm: {
+                title: "Add task",
+                nameButton: "Add"
+            },
+            inputData: {
+                title: "",
+                task: "",
+                isFormValid: true,
+            },
         }
     },
-    mixins: [formMixin],
     methods: {
         ...mapMutations("todos", [names.ADD_TODO]),
         addTodo() {
-            if (this.validation()){
+            if (this.$refs.form.validate()){
                 let newTodoItem = {
                     id: Math.floor(Math.random() * 1000 + 1), //random number between 1 and 1000
-                    title: this.title,
-                    task: this.task,
+                    title: this.inputData.title,
+                    task: this.inputData.task,
                     completed: false
                 };
                 this.ADD_TODO(newTodoItem);
-                this.title = "";
-                this.task = "";
-                this.dialog = false;
+                this.inputData.title = "";
+                this.inputData.task = "";
+                this.isShowDialog = false;
             }
         },
+        changeShowDialog(bool) {
+            this.isShowDialog = bool;
+        },
+        validation() {
+            if (!this.inputData.title.length || !this.inputData.task.length) {
+                return false
+            }
+            else if (this.inputData.title.length > 20 || this.inputData.task.length > 100) {
+                return false
+            }
+            return true;
+        }
     }
 };
 </script>

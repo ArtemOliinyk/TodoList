@@ -33,8 +33,8 @@ export default {
     data() {
         return {
             error: {
-            message: "",
-            show: false
+                message: "",
+                show: false
             }
         };
     },

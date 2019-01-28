@@ -1,14 +1,12 @@
-div
-    block above
-    v-dialog(v-model="dialog" persistent max-width="600px")
-        v-card
-            v-card-title
-                block title
-            v-card-text
-                v-container(grid-list-md)
-                    include  ../pugTemplates/FormTemplate
-                small *indicates required field
-            v-card-actions
-                v-spacer
-                v-btn(@click="dialog = false" color="blue darken-1" flat ) Close
-                block action
+v-dialog(v-model="isShowDialog" persistent max-width="600px")
+    v-card
+        v-card-title
+            block title
+        v-card-text
+            v-container(grid-list-md)
+                include  ../pugTemplates/FormTemplate
+            small *indicates required field
+        v-card-actions
+            v-spacer
+            v-btn(@click="changeShowDialog(false)" color="blue darken-1" flat ) Close
+            block action
