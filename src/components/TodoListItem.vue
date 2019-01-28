@@ -16,7 +16,7 @@
     block title
         span.headline Edit Task
     block action
-        v-btn(@click="editTodo(index)" color="blue darken-1" flat ) Edit
+        v-btn(@click="editTodo(index)" color="blue darken-1" flat ) Save
 
 </template>
 
@@ -24,6 +24,7 @@
 import { names } from "../store/names/todo";
 import { formMixin } from "../mixins/formMixin";
 import Vue from "vue";
+import { mapMutations } from "vuex";
 export default {
     props: {
         todo: Object,
@@ -44,22 +45,23 @@ export default {
                 return this.todo.completed;
                 },
             set(value) {
-                this.$store.commit("todos/" + names.TOGGLE_TODO, { index: this.index, isComplete: value});
+                this.TOGGLE_TODO({ index: this.index, isComplete: value });
             }
         }
         },
     methods: {
+        ...mapMutations("todos", [names.TOGGLE_TODO, names.EDIT_TODO, names.DELETE_TODO]),
         editTodo(index) {
             let newTodo = this.todo;
             if (this.title.length && this.task.length) {
                 Vue.set(newTodo, "title", this.title);
                 Vue.set(newTodo, "task", this.task);
-                this.$store.commit("todos/" + names.EDIT_TODO, {index: index, todo: newTodo});
+                this.EDIT_TODO({ index: index, todo: newTodo });
                 this.dialog = false;
             }
         },
         deleteTodo(todo) {
-            this.$store.commit("todos/" + names.DELETE_TODO, todo);
+            this.DELETE_TODO(todo);
         }
     }
 };

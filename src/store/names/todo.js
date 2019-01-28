@@ -19,5 +19,5 @@ export const names = {
   COMPLETE_TODOS,
   SET_FILTER,
   EDIT_TODO,
-  TOGGLE_TODO
+  TOGGLE_TODO,
 };

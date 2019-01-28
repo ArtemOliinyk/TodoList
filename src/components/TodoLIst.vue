@@ -9,19 +9,22 @@
 </template>
 <script>
 import { names } from "../store/names/todo";
-import { mapGetters} from 'vuex';
+import { mapGetters, mapMutations} from 'vuex';
 import TodoListItem from "./TodoListItem";
 export default {
     name: "TodoList",
     components: {
         TodoListItem
     },
-    created() {
-        this.$store.commit("todos/" + names.INITIAL_TODOS);
-        },
     computed: {
         ...mapGetters("todos", ["filteredTodos"])
-    }
+    },
+    methods: {
+        ...mapMutations("todos", [names.INITIAL_TODOS]),
+    },
+    created() {
+        this.INITIAL_TODOS();
+        },
 };
 </script>
 

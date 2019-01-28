@@ -12,21 +12,21 @@
                     v-layout(align-center justify-space-between row wrap)
                         p.headline Completed: {{getCompletedTodos.length}}
                         v-progress-circular(:size="50" :value="progress" color="teal")
-                Input
+                AddingComponent
                 NavigationBar
                 TodoLIst
 
 </template>/?
 
 <script>
-import Input from './Input';
+import AddingComponent from './AddingComponent';
   import NavigationBar from './NavigationBar'
   import TodoLIst from './TodoLIst';
   import { mapState, mapGetters } from 'vuex';
 export default {
     name: "app",
     components: {
-        Input,
+        AddingComponent,
         NavigationBar,
         TodoLIst
     },

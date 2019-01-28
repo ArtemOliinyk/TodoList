@@ -15,8 +15,9 @@
 <script>
 import { names } from "../store/names/todo";
 import { formMixin } from "../mixins/formMixin";
+import { mapMutations } from "vuex";
 export default {
-    name: "Input",
+    name: "AddingComponent",
     data(){
         return {
             dialog: false
@@ -24,15 +25,16 @@ export default {
     },
     mixins: [formMixin],
     methods: {
+        ...mapMutations("todos", [names.ADD_TODO]),
         addTodo() {
-            if (this.validation() === true){
+            if (this.validation()){
                 let newTodoItem = {
                     id: Math.floor(Math.random() * 1000 + 1), //random number between 1 and 1000
                     title: this.title,
                     task: this.task,
                     completed: false
                 };
-                this.$store.commit("todos/" + names.ADD_TODO, newTodoItem);
+                this.ADD_TODO(newTodoItem);
                 this.title = "";
                 this.task = "";
                 this.dialog = false;

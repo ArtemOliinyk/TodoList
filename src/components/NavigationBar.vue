@@ -4,7 +4,7 @@
             v-flex(xs6)
                 v-radio-group(:value="filter" @change="filterChange" row)
                     v-radio(label="All" value="all" color="black")
-                    v-radio(label="Completed" value="complete" color="green")
+                    v-radio(label="Completed" value="completed" color="green")
                     v-radio(label="Not Completed" value="notCompleted" color="red")
             v-layout(justify-end row)
                 v-flex(xs9)
@@ -22,13 +22,13 @@
 
 <script>
 import { names } from "../store/names/todo";
-import { mapState, mapGetters } from "vuex";
+import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
     name: "NavigationBar",
     computed: {
         ...mapState("todos", ["todos", "filter"]),
-        ...mapGetters("todos", ["getCompletedTodos", "getRemainedTodos"])
+        ...mapGetters("todos", ["getCompletedTodos", "getRemainedTodos"]),
     },
     data() {
         return {
@@ -39,26 +39,28 @@ export default {
         };
     },
     methods: {
+        ...mapMutations("todos", [names.SET_FILTER, names.SET_TODOS]),
+        ...mapActions("todos", [names.COMPLETE_TODOS, names.DELETE_TODOS]),
         filterChange(value) {
-            this.$store.commit("todos/" + names.SET_FILTER, value);
+            this.SET_FILTER(value);
         },
         completeAllTodos() {
             if ( this.todos.every( todo => todo.completed )) {
                 return (this.error = { message: "All todos are completed yet!", show: true});
             }
-            this.$store.dispatch("todos/" + names.COMPLETE_TODOS, this.todos);
+            this.COMPLETE_TODOS(this.getRemainedTodos);
         },
         deleteCompletedTodos() {
             if (!this.getCompletedTodos.length) {
                 return (this.error = { message: "There are no completed todos! Please click on a todo to do it completed", show: true});
             }
-            this.$store.commit("todos/" + names.SET_TODOS, this.getRemainedTodos);
+            this.SET_TODOS(this.getRemainedTodos);
         },
         deleteAllTodos() {
             if (!this.todos.length) {
                 return (this.error = { message: "There are no todos!", show: true });
             }
-            this.$store.dispatch("todos/" + names.DELETE_TODOS, this.todos);
+            this.DELETE_TODOS(this.todos);
         }
     }
 };
