@@ -5,9 +5,9 @@
                 p.text-xs-center.display-2 To Do List
                 v-layout(column)
                     v-flex
-                        span.pr-4.headline Tasks: {{todos.length}}
-                        span.pr-4.headline Completed: {{getCompletedTodos.length}}
-                        span.pr-4
+                        span.pl-2.headline Tasks: {{todos.length}}
+                        span.pl-4.headline Completed: {{getCompletedTodos.length}}
+                        span.pl-4
                             AddingComponent
                     v-flex
                         v-progress-linear(v-model="progress" color="teal")

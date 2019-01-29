@@ -7,11 +7,9 @@
 <script>
 import { names } from "../store/names/todo";
 import { mapMutations } from "vuex";
-import TodoItemForm from "./TodoItemForm";
 export default {
     name: "AddingComponent",
     components: {
-        TodoItemForm
     },
     inject: ["onForm"],
     data() {
@@ -51,15 +49,6 @@ export default {
               isShowDialog: true,
           })
         },
-        validation() {
-            if (!this.inputData.title.length || !this.inputData.task.length) {
-                return false
-            }
-            else if (this.inputData.title.length > 20 || this.inputData.task.length > 100) {
-                return false
-            }
-            return true;
-        }
     }
 };
 </script>
