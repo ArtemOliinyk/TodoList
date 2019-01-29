@@ -1,4 +1,8 @@
 v-layout(column)
     v-flex.pa-0
-        v-text-field(v-model.trim="inputData.title" :rules="titleRules" label="Title*" :counter="20" required)
-        v-textarea(v-model.trim="inputData.task" :rules="taskRules" label="Task*" :counter="100"  hint="Hint text" required)
+        v-text-field(v-model.trim="formData.inputData.title"
+                    :rules="rules.titleRules" label="Title*"
+                    :counter="20" maxlength="20")
+        v-textarea(v-model.trim="formData.inputData.task"
+                    :rules="rules.taskRules" label="Task*" :counter="100"
+                    hint="Hint text" maxlength="100")

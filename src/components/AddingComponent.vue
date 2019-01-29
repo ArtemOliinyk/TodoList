@@ -1,11 +1,7 @@
 <template lang="pug">
-    v-container.pa-0
-        v-layout(justify-center)
-            v-btn(@click="isShowDialog = true" color="blue darken-2" dark )
-                v-icon(dark) add
-                | Add Task
-        v-form(ref="form" v-model="inputData.isFormValid" lazy-validation)
-            TodoItemForm(:isShowDialog="isShowDialog" :dataForm="dataForm" :inputData="inputData" :action="addTodo" :changeShowDialog="changeShowDialog")
+    v-btn(@click="sendDataToApp" color="blue darken-2" dark)
+        v-icon(dark) add
+        | Add Task
 </template>
 
 <script>
@@ -17,6 +13,7 @@ export default {
     components: {
         TodoItemForm
     },
+    inject: ["onForm"],
     data() {
         return {
             isShowDialog: false,
@@ -27,14 +24,13 @@ export default {
             inputData: {
                 title: "",
                 task: "",
-                isFormValid: true,
             },
         }
     },
     methods: {
         ...mapMutations("todos", [names.ADD_TODO]),
         addTodo() {
-            if (this.$refs.form.validate()){
+            if (this.validation()){
                 let newTodoItem = {
                     id: Math.floor(Math.random() * 1000 + 1), //random number between 1 and 1000
                     title: this.inputData.title,
@@ -44,11 +40,16 @@ export default {
                 this.ADD_TODO(newTodoItem);
                 this.inputData.title = "";
                 this.inputData.task = "";
-                this.isShowDialog = false;
+                this.onForm({isShowDialog: false});
             }
         },
-        changeShowDialog(bool) {
-            this.isShowDialog = bool;
+        sendDataToApp() {
+          this.onForm({
+              dataForm: this.dataForm,
+              inputData: this.inputData,
+              action: this.addTodo,
+              isShowDialog: true,
+          })
         },
         validation() {
             if (!this.inputData.title.length || !this.inputData.task.length) {
