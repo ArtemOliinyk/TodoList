@@ -4,7 +4,7 @@ import LocalStorageService from "../../Services/LocalStorageService";
 
 const state = {
     todos: [],
-    filter: "all"
+    filter: "all",
 };
 const getters = {
     filteredTodos: (state, getters) => {
@@ -42,7 +42,6 @@ const mutations = {
         state.todos.splice(index, 1);
         LocalStorageService.setLocalStorage("todos", state.todos);
     },
-
     [names.EDIT_TODO]: (state, data) => {
         Vue.set(state.todos, data.index, data.todo);
         LocalStorageService.setLocalStorage("todos", state.todos);

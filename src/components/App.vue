@@ -13,7 +13,7 @@
                         v-progress-linear(v-model="progress" color="teal")
                 NavigationBar
                 TodoList
-                TodoItemForm(:formData="formData")
+                TodoItemForm(:todo="todo" :formDialog="formDialog")
 
 </template>/?
 
@@ -25,17 +25,19 @@ import { mapState, mapGetters } from 'vuex';
 import TodoItemForm from "./TodoItemForm";
 export default {
     name: "app",
-    provide() {
-        return {
-            onForm: (formData) =>  this.formData = {...this.formData,...formData}
-        }
-    },
     data() {
         return {
-            formData: {
-                isShowDialog:false,
-                changeShowDialog: () =>this.formData.isShowDialog = false
-            },
+            test:false,
+            todo: {},
+            formDialog: false
+        }
+    },
+    provide(){
+        return {
+            taskView: (todo, formDialog) => {
+                this.todo = todo;
+                this.formDialog = formDialog;
+            }
         }
     },
     components: {

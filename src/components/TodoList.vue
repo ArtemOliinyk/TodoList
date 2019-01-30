@@ -24,7 +24,7 @@ export default {
     },
     created() {
         this.INITIAL_TODOS();
-        },
+    },
 };
 </script>
 
