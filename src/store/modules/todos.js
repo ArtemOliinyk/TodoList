@@ -47,7 +47,7 @@ const mutations = {
         LocalStorageService.setLocalStorage("todos", state.todos);
     },
     [names.COMPLETE_TODO]: (state, todo) => {
-        let index = state.todos.indexOf(todo);
+        let index = state.todos.findIndex(item => item.id === todo.id);
         Vue.set(state.todos[index], "completed", true);
         LocalStorageService.setLocalStorage("todos", state.todos);
     },

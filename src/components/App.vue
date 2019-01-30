@@ -13,7 +13,7 @@
                         v-progress-linear(v-model="progress" color="teal")
                 NavigationBar
                 TodoList
-                TodoItemForm(:todo="todo" :formDialog="formDialog")
+                TodoItemForm(:todo="todo" :formMode="formMode" :formDialog="formDialog")
 
 </template>/?
 
@@ -27,15 +27,16 @@ export default {
     name: "app",
     data() {
         return {
-            test:false,
             todo: {},
-            formDialog: false
+            formMode: "",
+            formDialog: false,
         }
     },
-    provide(){
+    provide() {
         return {
-            taskView: (todo, formDialog) => {
-                this.todo = todo;
+            taskView: (todo, formMode, formDialog) => {
+                this.todo = {...todo};
+                this.formMode = formMode;
                 this.formDialog = formDialog;
             }
         }

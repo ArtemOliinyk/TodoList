@@ -3,7 +3,7 @@
         v-flex.xs11
             v-list-tile(@click="toggleTodo(todo.completed)" ripple)
                 v-list-tile-action
-                    v-checkbox(v-model="isCompleted")
+                    v-checkbox(v-model="isCompleted" readonly)
                 v-list-tile-content
                     v-list-tile-title {{ todo.title }}
                     v-list-tile-sub-title {{ todo.task }}
@@ -17,12 +17,9 @@
 
 <script>
 import { names } from "../store/names/todo";
-import { mapMutations } from "vuex";
-import Vue from "vue";
-import TodoItemForm from "./TodoItemForm";
+import { mapMutations } from 'vuex';
 export default {
     name: "TodoListItem",
-    components: {  TodoItemForm },
     inject: ["taskView"],
     props: {
         todo: Object,
@@ -30,42 +27,23 @@ export default {
     },
     data() {
         return {
-            inputData: {
-                title: this.todo.title,
-                task: this.todo.task,
-            },
-            dataForm: {
-                title: "Edit Task",
-                nameButton: "Save"
-            },
-            formDialog: false
+            formDialog: false,
+            formMode: "editing",
         };
     },
     computed: {
-        isCompleted(){
+        isCompleted() {
             return this.todo.completed;
         }
     },
     methods: {
-        ...mapMutations("todos", [names.TOGGLE_TODO, names.EDIT_TODO, names.DELETE_TODO]),
+        ...mapMutations("todos", [names.DELETE_TODO, names.TOGGLE_TODO]),
         deleteTodo(todo) {
             this.DELETE_TODO(todo);
         },
         edit() {
             this.formDialog = true;
-            this.taskView({
-                inputData: this.inputData,
-                dataForm: this.dataForm,
-                action: this.editTodo
-            }, this.formDialog)
-        },
-        editTodo(index) {
-            let newTodo = this.todo;
-            Vue.set(newTodo, "title", this.inputData.title);
-            Vue.set(newTodo, "task", this.inputData.task);
-            this.EDIT_TODO({ index: index, todo: newTodo });
-            this.formDialog = false;
-            this.taskView(null, this.formDialog);
+            this.taskView(this.todo, this.formMode, this.formDialog)
         },
         toggleTodo(value){
             this.TOGGLE_TODO({ index: this.index, isComplete: !value });
